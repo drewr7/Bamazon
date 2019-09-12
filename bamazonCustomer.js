@@ -19,17 +19,29 @@ var connection = mysql.createConnection({
 // connect to the mysql server and sql database
 connection.connect(function(err) {
     if (err) throw err;
-    // run the "what do you want" function after connection
+    // run the "displayProducts" & "what do you want" functions after connection
+
     wdyw();
   });
   
-  // function which prompts the user for what product they want to purchase
+  // main function display products, take customer input, update database
   function wdyw() {
+    // query the database for all items being auctioned
+  connection.query("SELECT * FROM auctions", function(err, results) {
+    if (err) throw err;
+    //prompt user to selct product & qty
     inquirer
       .prompt([
           {
         name: "productid",
-        type: "input",
+        type: "rawlist",
+        choices: function() {
+            var idArray = [];
+            for (var i = 0; i < results.length; i++) {
+              idArray.push(results[i].item_id);
+            }
+            return idArray;
+          },
         message: "Enter the item id of the product you would like to purchase"
       },
       {
@@ -45,11 +57,38 @@ connection.connect(function(err) {
       }
     ])
       .then(function(answer) {
+        // get the information of the chosen item
+        var chosenItem;
+        for (var i = 0; i < results.length; i++) {
+          if (results[i].item_id === answer.choice) {
+            chosenItem = results[i];
+          }
+        }
+
         // based on their answer check to see if we have enough in stock
-        
-
-        // If not enough in stock display Insufficient quantity!
-
-        // If in stock, fill customer order by reducing qty in database then show customer their total cost.
-      });
+        if(chosenItem.stock_quantity >= parseInt(answer.quantity)) {
+            //enough stock to fill order so update db by reducting qty on product
+            connection.query(
+                "UPDATE items SET ? WHERE ?",
+                [
+                  {
+                    stock_quantity: stock_quantity - answer.quantity
+                  },
+                  {
+                    item_id: productid
+                  }
+                ],
+                function(error) {
+                  if (error) throw err;
+                  console.log("Your order total is " + answer.quantity);
+                  wdyw();
+                }
+              );
+        }
+        else {
+        //out of stock
+        console.log("Insufficient quantity!"); 
+        wdyw();
+        }  
+    });
   }
