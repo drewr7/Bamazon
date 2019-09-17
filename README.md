@@ -8,10 +8,14 @@
 
 ## Screenshots
 
-1. Select Product - ![firstprompt]
-2. Select Quantity - ![secondprompt]
-3. Show Order Total - ![ordertotal]
-4. Prompt Again - ![promptagain]
+1. Select Product - ![firstprompt]https://github.com/drewr7/Bamazon/blob/master/screenshots/Screen%20Shot%202019-09-17%20at%2011.36.17%20AM.png
+
+2. Select Quantity - ![secondprompt]https://github.com/drewr7/Bamazon/blob/master/screenshots/Screen%20Shot%202019-09-17%20at%2011.36.28%20AM.png
+
+3. Show Order Total - ![ordertotal]https://github.com/drewr7/Bamazon/blob/master/screenshots/Screen%20Shot%202019-09-17%20at%2011.36.40%20AM.png
+
+4. Prompt Again - ![promptagain]https://github.com/drewr7/Bamazon/blob/master/screenshots/Screen%20Shot%202019-09-17%20at%2011.36.49%20AM.png
+
 
 - Deployed version: https://drewr7.github.io/Bamazon/.
 
