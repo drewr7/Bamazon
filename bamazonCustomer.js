@@ -27,7 +27,7 @@ connection.connect(function(err) {
   // main function display products, take customer input, update database
   function wdyw() {
     // query the database for all items being auctioned
-  connection.query("SELECT * FROM auctions", function(err, results) {
+  connection.query("SELECT * FROM items", function(err, results) {
     if (err) throw err;
     //prompt user to selct product & qty
     inquirer
@@ -57,14 +57,16 @@ connection.connect(function(err) {
       }
     ])
       .then(function(answer) {
+        //console.log(answer)
+        //console.log(results)
         // get the information of the chosen item
         var chosenItem;
         for (var i = 0; i < results.length; i++) {
-          if (results[i].item_id === answer.choice) {
+          if (results[i].item_id === answer.productid) {
             chosenItem = results[i];
           }
         }
-
+        //console.log(chosenItem)
         // based on their answer check to see if we have enough in stock
         if(chosenItem.stock_quantity >= parseInt(answer.quantity)) {
             //enough stock to fill order so update db by reducting qty on product
@@ -72,15 +74,16 @@ connection.connect(function(err) {
                 "UPDATE items SET ? WHERE ?",
                 [
                   {
-                    stock_quantity: stock_quantity - answer.quantity
+                    stock_quantity: chosenItem.stock_quantity - answer.quantity
                   },
                   {
-                    item_id: productid
+                    item_id: chosenItem.productid
                   }
                 ],
                 function(error) {
                   if (error) throw err;
-                  console.log("Your order total is " + answer.quantity);
+                  let total = answer.quantity*chosenItem.price;
+                  console.log("Your order total is " + total);
                   wdyw();
                 }
               );
@@ -91,4 +94,4 @@ connection.connect(function(err) {
         wdyw();
         }  
     });
-  }
+  })};
